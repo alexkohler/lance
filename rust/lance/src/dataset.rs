@@ -958,7 +958,7 @@ impl Dataset {
             return Ok(RecordBatch::new_empty(schema));
         }
         print!("!!! take called");
-        print!(num_cpus::get());
+        print!("{}", num_cpus::get());
         print!("take call complete");
 
         let mut sorted_indices: Vec<usize> = (0..row_indices.len()).collect();
