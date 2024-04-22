@@ -957,9 +957,9 @@ impl Dataset {
             let schema = Arc::new(projection.into());
             return Ok(RecordBatch::new_empty(schema));
         }
-        print!("!!! take called");
-        print!("{}", num_cpus::get());
-        print!("take call complete");
+        print!("!!! ~~~~~~~~~~ V2 take called\n");
+        print!("{}\n", num_cpus::get());
+        print!("take call complete\n");
 
         let mut sorted_indices: Vec<usize> = (0..row_indices.len()).collect();
         sorted_indices.sort_by_key(|&i| row_indices[i]);
@@ -1051,7 +1051,8 @@ impl Dataset {
             })
             .collect::<Vec<_>>();
         let batches = stream::iter(take_tasks)
-            .buffered(num_cpus::get() * 4)
+            // .buffered(num_cpus::get() * 4)
+            .buffered(32)
             .try_collect::<Vec<RecordBatch>>()
             .await?;
 

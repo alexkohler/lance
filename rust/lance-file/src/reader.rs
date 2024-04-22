@@ -368,7 +368,8 @@ impl FileReader {
                 )
                 .await
             })
-            .buffered(num_cpus::get() * 4)
+            // .buffered(num_cpus::get() * 4)
+            .buffered(32)
             .try_collect::<Vec<_>>()
             .await?;
 
@@ -484,7 +485,8 @@ pub async fn read_batch(
         // We box this because otherwise we get a higher-order lifetime error.
         let arrs = stream::iter(&schema.fields)
             .map(|f| async { read_array(reader, f, batch_id, &reader.page_table, params).await })
-            .buffered(num_cpus::get() * 4)
+            // .buffered(num_cpus::get() * 4)
+            .buffered(32)
             .try_collect::<Vec<_>>()
             .boxed();
         let arrs = arrs.await?;
